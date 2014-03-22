@@ -217,6 +217,18 @@ public class NetworkInterface : MonoBehaviour {
 	}
 
 
+	[RPC]
+	void iNewWall(int location){
+		GameObject.Find ("GameManager").GetComponent<GenerateLevel>().buildWall (location);
+	}
+
+	public void oNewWall(int location)
+	{
+		networkView.RPC("iNewWall", RPCMode.Others,new object[]{location});
+	}
+
+
+
 
 
 	#endregion

@@ -32,7 +32,7 @@ public class GenerateLevel : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-		delayOver = true;
+		delayOver = false;
 	}
 	void Start(){
 		CreateMap ();
@@ -107,6 +107,7 @@ public class GenerateLevel : MonoBehaviour {
 				yield return new WaitForSeconds(0.001f);
 			}
 		}
+		delayOver = true;
 	}
 	void MoveForward(){
 		if (face == 0) {
@@ -266,6 +267,22 @@ public class GenerateLevel : MonoBehaviour {
 		                             , Quaternion.identity) as GameObject;
 		go.transform.parent = destructableWallContainer.transform;
 
+		map [(int)wallPosition.x, (int)wallPosition.z].tileObj = go;
+		map [(int)wallPosition.x, (int)wallPosition.z].tile = Tile.TileType.destructable;
+		if(Network.isClient || Network.isServer)GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oNewWall ((int)(wallPosition.x*mapZ+wallPosition.z));
+
+	}
+	public void buildWall(int pos){
+		int x = pos / mapZ;
+		int z = pos % mapZ;
+		wallPosition = new Vector3(x,height,z);
+		Destroy (map [(int)x, (int)z].tileObj);
+		GameObject go = Instantiate (DestructableWall [(int)(Random.value * DestructableWall.Length)], 
+		                             wallPosition + this.transform.position
+		                             
+		                             , Quaternion.identity) as GameObject;
+		go.transform.parent = destructableWallContainer.transform;
+		
 		map [(int)wallPosition.x, (int)wallPosition.z].tileObj = go;
 		map [(int)wallPosition.x, (int)wallPosition.z].tile = Tile.TileType.destructable;
 
