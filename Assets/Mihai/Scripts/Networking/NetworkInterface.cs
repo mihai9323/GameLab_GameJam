@@ -220,7 +220,7 @@ public class NetworkInterface : MonoBehaviour {
 
 	[RPC]
 	void iNewWall(int location){
-		GameObject.Find ("GameManager").GetComponent<GenerateLevel>().buildWall (location);
+		GameObject.Find ("Map").GetComponent<GenerateLevel>().buildWall (location);
 	}
 
 	public void oNewWall(int location)
