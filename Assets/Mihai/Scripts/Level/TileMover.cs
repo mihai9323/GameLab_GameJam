@@ -7,8 +7,8 @@ public class TileMover : MonoBehaviour {
 	void Start () {
 		Performance.EnterFrame += moveOnExit ;
 	}
-	void Update(){
-
+	void OnDestroy(){
+		Performance.EnterFrame -= moveOnExit;
 	}
 	public void moveOnExit(){
 		if (transform.position.x > east) {
@@ -24,6 +24,7 @@ public class TileMover : MonoBehaviour {
 			transform.position = new Vector3(transform.position.x,transform.position.y,north-(south- transform.position.z));
 		}
 	}
+
 
 
 }

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class NetworkInterface : MonoBehaviour {
 	static GameObject _instance;
@@ -167,117 +169,13 @@ public class NetworkInterface : MonoBehaviour {
 //		GameObject.Instantiate(networkCube, Vector3.zero, Quaternion.identity);
 //	}
 
-	[RPC]	
-	void iSendProgress(float distance)
-	{
-		//GameObject.Find("GameController").GetComponent<GameController>().distanceRunOther = distance;
-	}
 
-	public void oSendProgress(float distance)
-	{
-		networkView.RPC("iSendProgress", RPCMode.Others, new object[]{distance});
-	}
 
-	[RPC]	
-	void iHitFirewall()
-	{
-		Debug.Log("iHitFirewall not implemented yet");
-	}
 
-	public void oHitFirewall()
-	{
-		networkView.RPC("iHitFirewall", RPCMode.Others, null);
-	}
 
-	[RPC]	
-	void iVibrate(float duration)
-	{
-		Debug.Log("iVibrate not implemented yet");
-	}
 
-	public void oVibrate()
-	{
-		Debug.Log("oVibrate not implemented yet");
-		networkView.RPC("iVibrate", RPCMode.Others, new object[]{1f});
-	}
-
-	[RPC]	
-	void iGlitch()
-	{
-		//GameObject.Find("GameController").GetComponent<GameController>().SetPopUp();
-	}
-
-	public void oGlitch()
-	{
-		Debug.Log("oGlitch not implemented yet");
-		networkView.RPC("iGlitch", RPCMode.Others, null);
-	}
-
-	[RPC]	
-	void iMute()
-	{
-		//AndroidControls.Mute();
-	}
-
-	public void oMute()
-	{
-		networkView.RPC("iMute", RPCMode.Others, null);
-	}
-
-	[RPC]	
-	void iSetBrightness()
-	{
-		//GameObject.Find("Center").GetComponent<AvatarActions>().Brightness();
-	}
-
-	public void oSetBrightness()
-	{
-		networkView.RPC("iSetBrightness", RPCMode.Others, null);
-	}
-
-	bool haveFinished = false;
-	public bool iWon = false; 
-	[RPC]	
-	void iFinished(float time)
-	{
-	//	if(!haveFinished)
-			//GameObject.Find("GameController").GetComponent<GameController>().FinishScreen(false, time);
-	}
-
-	public void oFinished(float time)
-	{
-//		hasWon
-		if(!haveFinished)
-			iWon = true;
-		//GameObject.Find("GameController").GetComponent<GameController>().FinishScreen(!haveFinished, time);
-		haveFinished = true;
-		networkView.RPC("iFinished", RPCMode.Others, new object[]{time});
-
-	}
 	
-	[RPC]	
-	void iSendscore(float score)
-	{
-		Debug.Log("iSendscore not implemented yet");
-	}
 
-	public void oSendscore()
-	{
-		Debug.Log("oSendscore not implemented yet");
-		networkView.RPC("iSendscore", RPCMode.Others, new object[]{100f});
-	}
-
-	[RPC]	
-	void iResetGyro(float duration)
-	{
-		Debug.Log("iResetGyro not implemented yet");
-	}
-
-	public void oResetGyro()
-	{
-		Debug.Log("oResetGyro not implemented yet");
-		networkView.RPC("iResetGyro", RPCMode.Others, new object[]{1f});
-	}
 
 	[RPC]	
 	void iStartGame(string levelName)
@@ -317,5 +215,9 @@ public class NetworkInterface : MonoBehaviour {
 	{
 		networkView.RPC("iIsReady", RPCMode.All, null);
 	}
+
+
+
+
 	#endregion
 }

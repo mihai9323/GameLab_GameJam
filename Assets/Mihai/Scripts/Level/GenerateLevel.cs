@@ -25,8 +25,11 @@ public class GenerateLevel : MonoBehaviour {
 	public byte face = 0;
 	private NetworkInterface NI;
 	private Vector3 destination;
-
+	private Vector3 wallPosition;
 	private bool delayOver;
+
+	private Vector2 LastPosition;
+
 	// Use this for initialization
 	void Awake () {
 		delayOver = true;
@@ -53,6 +56,8 @@ public class GenerateLevel : MonoBehaviour {
 				}
 			}
 			position = new Vector3 (playerPosition.x, 0, playerPosition.y);
+			Debug.Log(playerPosition);
+			LastPosition = playerPosition;
 		}
 		StartCoroutine ("GenerateMap");
 		switch (face) {
@@ -67,16 +72,17 @@ public class GenerateLevel : MonoBehaviour {
 		Debug.Log (face);
 		if (Input.GetKeyUp (KeyCode.W) && delayOver) {
 			MoveForward ();
-			StartCoroutine(delay (2.0f));
+			StartCoroutine(delay (3.0f));
+
 		}
 
 		if (Input.GetKeyUp (KeyCode.A)&& delayOver) {
 			MoveLeft ();
-			StartCoroutine(delay (2.0f));
+			StartCoroutine(delay (3.0f));
 		}
 		if (Input.GetKeyUp (KeyCode.D)&& delayOver) {
 			MoveRight();
-			StartCoroutine(delay (2.0f));
+			StartCoroutine(delay (3.0f));
 		}
 	}
 
@@ -103,10 +109,27 @@ public class GenerateLevel : MonoBehaviour {
 		}
 	}
 	void MoveForward(){
-		if(face == 0) iTween.MoveTo(gameObject,new Vector3(Mathf.Round(transform.position.x),Mathf.Round(transform.position.y),Mathf.Round(transform.position.z))+new Vector3(0,0,-2),2.0f);
-		if(face == 1) iTween.MoveTo(gameObject,new Vector3(Mathf.Round(transform.position.x),Mathf.Round(transform.position.y),Mathf.Round(transform.position.z))+new Vector3(-2,0,0),2.0f);
-		if(face == 2) iTween.MoveTo(gameObject,new Vector3(Mathf.Round(transform.position.x),Mathf.Round(transform.position.y),Mathf.Round(transform.position.z))+new Vector3(0,0,2),2.0f);
-        if(face == 3) iTween.MoveTo(gameObject,new Vector3(Mathf.Round(transform.position.x),Mathf.Round(transform.position.y),Mathf.Round(transform.position.z))+new Vector3(2,0,0),2.0f);
+		if (face == 0) {
+				iTween.MoveTo (gameObject, new Vector3 (Mathf.Round (transform.position.x), Mathf.Round (transform.position.y), Mathf.Round (transform.position.z)) + new Vector3 (0, 0, -2), 2.0f);
+				LastPosition = playerPosition;
+				playerPosition -= new Vector2(0,-2);	
+		}
+		if (face == 1) {
+			iTween.MoveTo (gameObject, new Vector3 (Mathf.Round (transform.position.x), Mathf.Round (transform.position.y), Mathf.Round (transform.position.z)) + new Vector3 (-2, 0, 0), 2.0f);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(-2,0);			
+		}
+		if (face == 2) {
+			iTween.MoveTo (gameObject, new Vector3 (Mathf.Round (transform.position.x), Mathf.Round (transform.position.y), Mathf.Round (transform.position.z)) + new Vector3 (0, 0, 2), 2.0f);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(0,2);			
+		}
+        if (face == 3) {
+			iTween.MoveTo (gameObject, new Vector3 (Mathf.Round (transform.position.x), Mathf.Round (transform.position.y), Mathf.Round (transform.position.z)) + new Vector3 (2, 0, 0), 2.0f);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(2,0);	
+			
+		}
 	}
 	void MoveLeft(){
 		if (face == 0) {
@@ -119,6 +142,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(0,-2);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,270,0),3);
 		}else
 		if (face == 1) {
@@ -131,7 +156,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
-
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(-2,0);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,0,0),3);
 		}else
 		if (face == 2) {
@@ -144,6 +170,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(0,2);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,90,0),3);
 		}else
 		if (face == 3) {
@@ -156,6 +184,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(2,0);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,180,0),3);
 		}
 	}
@@ -170,6 +200,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(0,-2);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,90,0),3);
 		}else
 		if (face == 1) {
@@ -182,6 +214,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(-2,0);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,180,0),3);
 		}else
 		if (face == 2) {
@@ -194,6 +228,8 @@ public class GenerateLevel : MonoBehaviour {
 			ht.Add("path",path);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(0,2);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,270,0),3);
 		}else
 		if (face == 3) {
@@ -204,6 +240,8 @@ public class GenerateLevel : MonoBehaviour {
 		//	path[2] = path[1]+new Vector3(0,0,-1);
 			Hashtable ht= new Hashtable();
 			ht.Add("path",path);
+			LastPosition = playerPosition;
+			playerPosition -= new Vector2(2,0);
 			ht.Add ("speed",3);
 			iTween.MoveTo (gameObject,ht);
 			iTween.RotateTo(camera,new Vector3(CameraAngle,0,0),3);
@@ -213,6 +251,23 @@ public class GenerateLevel : MonoBehaviour {
 	IEnumerator delay(float time){
 		delayOver = false;
 		yield return new WaitForSeconds (time);
+		buildWall ();
 		delayOver = true;
 		}
+	private void buildWall(){
+	//	playerPosition = new Vector2 ((int)playerPosition.x % mapX,(int) playerPosition.y % mapZ);
+    //	LastPosition = new Vector2 ((int)LastPosition.x % mapX, (int)LastPosition.y % mapZ);
+		wallPosition = new Vector3((int)((playerPosition.x+LastPosition.x)/2)%mapX,height,(int)((playerPosition.y+LastPosition.y)/2)%mapZ);
+		Debug.Log(playerPosition+" "+LastPosition);
+		Destroy (map [(int)wallPosition.x, (int)wallPosition.z].tileObj);
+		GameObject go = Instantiate (DestructableWall [(int)(Random.value * DestructableWall.Length)], 
+		                             wallPosition + this.transform.position
+
+		                             , Quaternion.identity) as GameObject;
+		go.transform.parent = destructableWallContainer.transform;
+
+		map [(int)wallPosition.x, (int)wallPosition.z].tileObj = go;
+		map [(int)wallPosition.x, (int)wallPosition.z].tile = Tile.TileType.destructable;
+
+	}
 }
