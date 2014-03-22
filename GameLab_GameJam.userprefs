@@ -1,9 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Mihai\Scripts\Networking\LobbyScript.cs">
     <Files>
-      <File FileName="Assets\Mihai\Scripts\Networking\NetworkInterface.cs" Line="237" Column="4" />
-      <File FileName="Assets\Mihai\Scripts\Networking\LobbyScript.cs" Line="40" Column="28" />
+      <File FileName="Assets\Mihai\Scripts\Networking\NetworkInterface.cs" Line="285" Column="46" />
+      <File FileName="Assets\Mihai\Scripts\Networking\LobbyScript.cs" Line="31" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -35,13 +35,13 @@ public class NetworkInterface : MonoBehaviour {
 
 	public void CreateServer()
 	{
-		Network.InitializeServer(2, 25002, true);
+		Network.InitializeServer(1, 25002, true);
 		MasterServer.RegisterHost(gameTypeName, gameName);
 	}
 
 	public void CreateServerWithName(string namerzorz)
 	{
-		Network.InitializeServer(2, 25002, true);
+		Network.InitializeServer(1, 25002, true);
 		MasterServer.RegisterHost(gameTypeName, namerzorz);
 	}
 
@@ -99,7 +99,7 @@ public class NetworkInterface : MonoBehaviour {
 	void OnPlayerConnected()
 	{
 		Debug.Log("Player connected");
-		oStartGame("TubeOne");
+		//oStartGame("TubeOne");
 	}
 
 	void OnPlayerDisconnected()
@@ -283,7 +283,7 @@ public class NetworkInterface : MonoBehaviour {
 	void iStartGame(string levelName)
 	{
         //LoadingScene.nextLevel = levelName;
-		Application.LoadLevel("Loading");
+		Application.LoadLevel(levelName);
 		Time.timeScale = 0f;
 	}
 
