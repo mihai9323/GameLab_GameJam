@@ -8,9 +8,11 @@ public class Tile  {
 			wall, destructable, path
 		}
 	public TileType tile;
+	public GameObject tileObj;
 
-	public Tile(TileType tile){
+	public Tile(TileType tile,GameObject go){
 		this.tile = tile;
+		this.tileObj = go;
 	}
 
 }
