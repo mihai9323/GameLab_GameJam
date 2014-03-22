@@ -20,8 +20,8 @@ public class GenerateLevel : MonoBehaviour {
 	public float CameraOffSet;
 	public float CameraHeight = 1.0f;
 	public float CameraAngle = 7;
-	public static Tile[,] map;
-	public static Vector2 playerPosition=new Vector2(6,6);
+	public Tile[,] map;
+	public Vector2 playerPosition=new Vector2(6,6);
 	public byte face = 0;
 	private NetworkInterface NI;
 	private Vector3 destination;
@@ -38,6 +38,7 @@ public class GenerateLevel : MonoBehaviour {
 		CreateMap ();
 	}
 	public void CreateMap(){ //face : 0 = north 1 = east 2=south 3=west
+
 		Vector3 position;
 		if (Network.isServer) {
 			position = new Vector3 (playerPosition.x, 0, playerPosition.y);
@@ -56,10 +57,11 @@ public class GenerateLevel : MonoBehaviour {
 				}
 			}
 			position = new Vector3 (playerPosition.x, 0, playerPosition.y);
-			Debug.Log(playerPosition);
+
 			LastPosition = playerPosition;
 		}
 		StartCoroutine ("GenerateMap");
+
 		switch (face) {
 		case 0: camera.transform.position = position +new Vector3(0,CameraHeight,-CameraOffSet); camera.transform.rotation = Quaternion.Euler (CameraAngle,0,0); break;
 		case 1: camera.transform.position = position +new Vector3(-CameraOffSet,CameraHeight,0); camera.transform.rotation = Quaternion.Euler (CameraAngle,90,0); break;
@@ -69,7 +71,7 @@ public class GenerateLevel : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (face);
+
 		if (Input.GetKeyUp (KeyCode.W) && delayOver) {
 			MoveForward ();
 			StartCoroutine(delay (3.0f));
@@ -88,7 +90,7 @@ public class GenerateLevel : MonoBehaviour {
 
 	IEnumerator GenerateMap(){
 		map = new Tile[mapX,mapZ];
-		Debug.Log (mapX+" "+mapZ);
+
 
 		for(int x=0; x<mapX; x++){
 			for(int z=0; z<mapZ; z++){
@@ -104,9 +106,11 @@ public class GenerateLevel : MonoBehaviour {
 					go.transform.parent = wallContainer.transform;
 					map[x,z] = new Tile(Tile.TileType.wall,go);
 				}
-				yield return new WaitForSeconds(0.001f);
+
 			}
+			yield return new WaitForSeconds(0.01f);
 		}
+
 		delayOver = true;
 	}
 	void MoveForward(){
@@ -259,7 +263,7 @@ public class GenerateLevel : MonoBehaviour {
 	//	playerPosition = new Vector2 ((int)playerPosition.x % mapX,(int) playerPosition.y % mapZ);
     //	LastPosition = new Vector2 ((int)LastPosition.x % mapX, (int)LastPosition.y % mapZ);
 		wallPosition = new Vector3((int)((playerPosition.x+LastPosition.x)/2)%mapX,height,(int)((playerPosition.y+LastPosition.y)/2)%mapZ);
-		Debug.Log(playerPosition+" "+LastPosition);
+
 		Destroy (map [(int)wallPosition.x, (int)wallPosition.z].tileObj);
 		GameObject go = Instantiate (DestructableWall [(int)(Random.value * DestructableWall.Length)], 
 		                             wallPosition + this.transform.position

@@ -181,8 +181,9 @@ public class NetworkInterface : MonoBehaviour {
 	void iStartGame(string levelName)
 	{
         //LoadingScene.nextLevel = levelName;
+		Debug.Log (levelName);
 		Application.LoadLevel(levelName);
-		Time.timeScale = 0f;
+		//Time.timeScale = 0f;
 	}
 
 	void OnLevelWasLoaded(int level)
