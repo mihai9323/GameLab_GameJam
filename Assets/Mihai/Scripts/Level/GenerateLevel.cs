@@ -266,10 +266,11 @@ public class GenerateLevel : MonoBehaviour {
 		opPlayerPosition.y = mD [1];
 		opFace = mD [2];
 		OpGameState = Status.WaitCreation;
-		haveInfo = true;
+
 		if (GameState == Status.WaitCreation) {
 			GameState = Status.SuggestPath;
 			getDirectionData();
+			haveInfo = true;
 			sp.setArrows(opArrows);
 		}
 	}
