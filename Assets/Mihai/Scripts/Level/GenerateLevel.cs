@@ -330,7 +330,7 @@ public class GenerateLevel : MonoBehaviour {
 			
 		}
 		byte emptyPlaces = 0;
-		Debug.Log (frontPos);
+
 		if (map [(byte)frontPos.x, (byte)frontPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
 		if (map [(byte)leftPos.x, (byte)leftPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
 		if (map [(byte)rightPos.x, (byte)rightPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
