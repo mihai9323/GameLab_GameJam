@@ -245,6 +245,11 @@ public class GenerateLevel : MonoBehaviour {
 		}
 
 		delayOver = true;
+		if (OpGameState == Status.WaitCreation) {
+			getDirectionData();
+			haveInfo = true;
+			GameState = Status.SuggestPath;
+		}
 		mapBuilt ();
 	}
 	void mapBuilt(){
@@ -274,8 +279,7 @@ public class GenerateLevel : MonoBehaviour {
 				haveInfo = true;
 				sp.setArrows (opArrows);
 			} else {
-				getDirectionData();
-				haveInfo = true;
+				
 				
 		}
 	}
@@ -326,6 +330,7 @@ public class GenerateLevel : MonoBehaviour {
 			
 		}
 		byte emptyPlaces = 0;
+		Debug.Log (frontPos);
 		if (map [(byte)frontPos.x, (byte)frontPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
 		if (map [(byte)leftPos.x, (byte)leftPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
 		if (map [(byte)rightPos.x, (byte)rightPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
