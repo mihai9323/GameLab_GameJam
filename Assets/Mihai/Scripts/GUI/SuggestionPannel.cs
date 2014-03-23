@@ -10,7 +10,7 @@ public class SuggestionPannel : MonoBehaviour {
 	// Use this for initialization
 	public void setArrows(byte[] arr){
 		arrows = arr;
-		Debug (arr);
+//		Debug (arr);
 		/*
 		switch (arr [0]) {
 			case 0: leftArrow.texture = empty; break;
