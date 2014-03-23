@@ -128,7 +128,7 @@ public class GenerateLevel : MonoBehaviour {
 						if (chosenArrow == ChosenArrow.none) {
 								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
 										chosenArrow = ChosenArrow.forward;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
@@ -141,7 +141,7 @@ public class GenerateLevel : MonoBehaviour {
 				
 								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
 										chosenArrow = ChosenArrow.left;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
@@ -153,7 +153,7 @@ public class GenerateLevel : MonoBehaviour {
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
 										chosenArrow = ChosenArrow.right;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
