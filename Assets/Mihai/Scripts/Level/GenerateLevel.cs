@@ -256,6 +256,7 @@ public class GenerateLevel : MonoBehaviour {
 		GameState = Status.WaitCreation;
 		if(OpGameState == Status.WaitCreation){
 			GameState = Status.SuggestPath;
+			sp.setArrows(opArrows);
 		}
 		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
 	}
@@ -268,10 +269,14 @@ public class GenerateLevel : MonoBehaviour {
 		OpGameState = Status.WaitCreation;
 
 		if (GameState == Status.WaitCreation) {
-			GameState = Status.SuggestPath;
-			getDirectionData();
-			haveInfo = true;
-			sp.setArrows(opArrows);
+				GameState = Status.SuggestPath;
+				getDirectionData ();
+				haveInfo = true;
+				sp.setArrows (opArrows);
+			} else {
+				getDirectionData();
+				haveInfo = true;
+				
 		}
 	}
 
