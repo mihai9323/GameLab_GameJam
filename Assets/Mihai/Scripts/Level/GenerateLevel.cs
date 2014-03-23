@@ -685,7 +685,7 @@ public class GenerateLevel : MonoBehaviour {
 	}
 
 	public void died(GameObject monster){
-
+		ac.displayResults ();
 	}
 	public void takeTreasure(GameObject treasure){
 		gold += combo * gold;

@@ -8,11 +8,7 @@ public class AlertController : MonoBehaviour {
 
 	public void displayHowToPlay(){
 		howToMyPath.renderer.enabled = true;
-		howToPlay.renderer.enabled = false;
-		wallAlert.renderer.enabled = false;
-		waitingForPlayer.renderer.enabled = false;
-		exchangeGold.renderer.enabled = false;
-		results.renderer.enabled = false;
+
 
 		notification = true;
 	}
@@ -30,12 +26,9 @@ public class AlertController : MonoBehaviour {
 
 
 	public void displayHowToPath(){
-		howToMyPath.renderer.enabled = false;
+
 		howToPlay.renderer.enabled = true;
-		wallAlert.renderer.enabled = false;
-		waitingForPlayer.renderer.enabled = false;
-		exchangeGold.renderer.enabled = false;
-		results.renderer.enabled = false;
+
 		
 		notification = true;
 	}
@@ -50,32 +43,22 @@ public class AlertController : MonoBehaviour {
 		notification = true;
 	}
 	public void displayWait(){
-		howToMyPath.renderer.enabled = false;
-		howToPlay.renderer.enabled = false;
-		wallAlert.renderer.enabled = false;
+	
 		waitingForPlayer.renderer.enabled = true;
-		exchangeGold.renderer.enabled = false;
-		results.renderer.enabled = false;
-		
+	
 		notification = true;
 	}
 	public void displayExchangeGold(){
-		howToMyPath.renderer.enabled = true;
-		howToPlay.renderer.enabled = false;
-		wallAlert.renderer.enabled = false;
-		waitingForPlayer.renderer.enabled = false;
+
 		exchangeGold.renderer.enabled = true;
-		results.renderer.enabled = false;
+
 		
 		notification = true;
 	}
 	public void displayResults(){
-		howToMyPath.renderer.enabled = true;
-		howToPlay.renderer.enabled = false;
-		wallAlert.renderer.enabled = false;
-		waitingForPlayer.renderer.enabled = false;
+
 		exchangeGold.renderer.enabled = true;
-		results.renderer.enabled = false;
+	
 		
 		notification = true;
 	}
