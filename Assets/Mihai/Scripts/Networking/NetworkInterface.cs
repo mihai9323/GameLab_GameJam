@@ -11,7 +11,7 @@ public class NetworkInterface : MonoBehaviour {
 	string gameTypeName = "GLGameJam14.TrickTheMage";
 	bool isRefreshingServerList = false;
 	HostData[] hostdata;
-
+	GroundArrows ga;
 	void Awake()
 	{
 		//Util.Settings.DrawLog = false;
@@ -228,9 +228,39 @@ public class NetworkInterface : MonoBehaviour {
 		networkView.RPC("iNewWall", RPCMode.Others,new object[]{location});
 	}
 
+	[RPC]
+	void iGameBuilt(byte[] mapData){
+		GameObject.Find ("Map").GetComponent<GenerateLevel> ().getMapData (mapData);
+	}
+	public void oGameBuilt(byte[] mapData){
+		networkView.RPC("iGameBuilt", RPCMode.Others,new object[]{mapData});
+	}
+
+	[RPC]
+	void iSendGroundArrow(byte[] arrow){
+		GameObject.Find ("Map").GetComponent<GenerateLevel> ().OpponentSetGround (arrow);
+
+		switch (arrow[3]) {
+			case 0: GameObject.Find ("GroundArrows").GetComponent<GroundArrows>().leftArrow();break;
+			case 1:  GameObject.Find ("GroundArrows").GetComponent<GroundArrows>().frontArrow();break;
+			case 2:  GameObject.Find ("GroundArrows").GetComponent<GroundArrows>().rightArrow();break;
+		}
+
+	}
+	public void oSendGroundArrow(byte[] arrow){
+		networkView.RPC("iSendGroundArrow", RPCMode.Others,new object[]{arrow});
+	}
 
 
+	[RPC] ///Continue from here
+	void iSendPath(){
+		GameObject.Find ("Map").GetComponent<GenerateLevel> ().OpponentSetPath ();
 
+		
+	}
+	public void oSendPath(){
+		networkView.RPC("iSendPath", RPCMode.Others,null);
+	}
 
 	#endregion
 }

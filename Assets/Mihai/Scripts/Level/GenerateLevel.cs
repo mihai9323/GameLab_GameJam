@@ -3,6 +3,22 @@ using System.Collections;
 
 public class GenerateLevel : MonoBehaviour {
 
+
+	public enum Status
+		{
+			CreateMap,WaitCreation,SuggestPath,WaitForSuggestion,ChooseMyPath,WaitForPath,MoveMe,WaitForMove
+		}
+	public enum ChosenArrow
+		{
+		none,left,right,forward
+		}
+	public SuggestionPannel sp;
+	public Status GameState;
+	public Status OpGameState;
+	public ChosenArrow chosenArrow;
+	public byte[] myArrows;
+
+
 	public float blockSize;
 	public int mapX,mapZ;
 	public float height;
@@ -23,6 +39,15 @@ public class GenerateLevel : MonoBehaviour {
 	public Tile[,] map;
 	public Vector2 playerPosition=new Vector2(6,6);
 	public byte face = 0;
+
+	public Vector2 opPlayerPosition=new Vector2(6,6);
+	public byte opFace = 0;
+
+	public bool playTurn;
+	public byte[] opArrows; // 0-empty 1-monster 2-treasure 3-wall
+
+	public GameObject monster;
+	public GameObject treasure;
 	private NetworkInterface NI;
 	private Vector3 destination;
 	private Vector3 wallPosition;
@@ -33,6 +58,8 @@ public class GenerateLevel : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		delayOver = false;
+		GameState = Status.CreateMap;
+		OpGameState = Status.CreateMap;
 	}
 	void Start(){
 		CreateMap ();
@@ -70,22 +97,105 @@ public class GenerateLevel : MonoBehaviour {
 		}
 	}
 	// Update is called once per frame
+
+	public void OpponentSetGround(byte[] arr){
+		myArrows = arr;
+		OpGameState = Status.WaitForSuggestion;
+		if (GameState == Status.WaitForSuggestion) {
+			GameState = Status.ChooseMyPath;
+
+				
+		}
+	}
+	public void OpponentSetPath(){
+		OpGameState = Status.WaitForPath;
+		if (GameState == Status.WaitForPath) {
+			GameState = Status.MoveMe;
+			
+			
+		}
+	}
+
+
 	void Update () {
+		if (GameState == Status.SuggestPath) {
+						if (chosenArrow == ChosenArrow.none) {
+								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
+										chosenArrow = ChosenArrow.forward;
+										byte[] arr = new byte[3];
+										arr[0] = opArrows[0];
+										arr[1] = opArrows[1];
+										arr[2] = opArrows[2];
+										arr[3] = opArrows[1];
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
+										GameState = Status.WaitForSuggestion;
+										chosenArrow = ChosenArrow.none;
+								}
+				
+								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
+										chosenArrow = ChosenArrow.left;
+										byte[] arr = new byte[3];
+										arr[0] = opArrows[0];
+										arr[1] = opArrows[1];
+										arr[2] = opArrows[2];
+										arr[3] = opArrows[0];
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
+										GameState = Status.WaitForSuggestion;
+										chosenArrow = ChosenArrow.none;
+								}
+								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
+										chosenArrow = ChosenArrow.right;
+										byte[] arr = new byte[3];
+										arr[0] = opArrows[0];
+										arr[1] = opArrows[1];
+										arr[2] = opArrows[2];
+										arr[3] = opArrows[2];
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
+										GameState = Status.WaitForSuggestion;
+										chosenArrow = ChosenArrow.none;
+								}
+						}
+				} else if (GameState == Status.ChooseMyPath) {
+						if (chosenArrow == ChosenArrow.none) {
+								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
+										chosenArrow = ChosenArrow.forward;
+										GameState = Status.WaitForPath;
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
+								}
+				
+								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
+										chosenArrow = ChosenArrow.left;
+										GameState = Status.WaitForPath;
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
+								}
+								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
+										chosenArrow = ChosenArrow.right;
+								    	GameState = Status.WaitForPath;
+										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
+									}
+						}
+		
+				} else if (GameState == Status.MoveMe) {
+						if (chosenArrow == ChosenArrow.forward) {
+							MoveForward ();
+							StartCoroutine(delay (3.0f));
+					
+							
+						}
+						
+						if (chosenArrow == ChosenArrow.left) {
+							MoveLeft ();
+							StartCoroutine(delay (3.0f));
+							
+						}
+						if (chosenArrow == ChosenArrow.right) {
+							MoveRight();
+							StartCoroutine(delay (3.0f));
+							
+						}
+					chosenArrow = ChosenArrow.none;
+				}
 
-		if (Input.GetKeyUp (KeyCode.W) && delayOver) {
-			MoveForward ();
-			StartCoroutine(delay (3.0f));
-
-		}
-
-		if (Input.GetKeyUp (KeyCode.A)&& delayOver) {
-			MoveLeft ();
-			StartCoroutine(delay (3.0f));
-		}
-		if (Input.GetKeyUp (KeyCode.D)&& delayOver) {
-			MoveRight();
-			StartCoroutine(delay (3.0f));
-		}
 	}
 
 	IEnumerator GenerateMap(){
@@ -112,7 +222,194 @@ public class GenerateLevel : MonoBehaviour {
 		}
 
 		delayOver = true;
+		mapBuilt ();
 	}
+	void mapBuilt(){
+		//my map is built i will send this to the oponent
+		byte[] mapData = new byte[3];
+		mapData [0] = (byte)playerPosition.x;
+		mapData [1] = (byte)playerPosition.y;
+		mapData [2] = (byte)face;
+		GameState = Status.WaitCreation;
+		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
+	}
+	public void getMapData(byte[] mD){
+		//gets the position and orientation of the oponent
+		opPlayerPosition.x = mD [0];
+		opPlayerPosition.x = mD [1];
+		opFace = mD [2];
+		OpGameState = Status.WaitCreation;
+		if (GameState == Status.WaitCreation) {
+			GameState = Status.SuggestPath;
+			getDirectionData();
+			sp.setArrows(opArrows);
+		}
+	}
+
+
+	void getDirectionData(){
+		/// important creates the arrows for the opponent
+		Vector2 frontPos, leftPos, rightPos;
+
+		if (opFace == 0) {
+			frontPos = opPlayerPosition + new Vector2(0,3);
+			leftPos = opPlayerPosition + new Vector2(-1,2);
+			rightPos = opPlayerPosition + new Vector2(1,2);
+
+			frontPos = new Vector2((byte)frontPos.x%mapX,(byte)frontPos.y%mapZ);
+			leftPos = new Vector2((byte)leftPos.x%mapX,(byte)leftPos.y%mapZ);
+			rightPos = new Vector2((byte)rightPos.x%mapX,(byte)rightPos.y%mapZ);
+
+		}else
+		if (opFace == 1) {
+			frontPos = opPlayerPosition + new Vector2(3,0);
+			leftPos = opPlayerPosition + new Vector2(2,1);
+			rightPos = opPlayerPosition + new Vector2(2,-1);
+			
+			frontPos = new Vector2((byte)frontPos.x%mapX,(byte)frontPos.y%mapZ);
+			leftPos = new Vector2((byte)leftPos.x%mapX,(byte)leftPos.y%mapZ);
+			rightPos = new Vector2((byte)rightPos.x%mapX,(byte)rightPos.y%mapZ);
+			
+		}else
+		if (opFace == 2) {
+			frontPos = opPlayerPosition + new Vector2(0,-3);
+			leftPos = opPlayerPosition + new Vector2(1,-2);
+			rightPos = opPlayerPosition + new Vector2(-1,-2);
+			
+			frontPos = new Vector2((byte)frontPos.x%mapX,(byte)frontPos.y%mapZ);
+			leftPos = new Vector2((byte)leftPos.x%mapX,(byte)leftPos.y%mapZ);
+			rightPos = new Vector2((byte)rightPos.x%mapX,(byte)rightPos.y%mapZ);
+			
+		}else
+		if (opFace == 3) {
+			frontPos = opPlayerPosition + new Vector2(-3,0);
+			leftPos = opPlayerPosition + new Vector2(-2,-1);
+			rightPos = opPlayerPosition + new Vector2(-2,1);
+			
+			frontPos = new Vector2((byte)frontPos.x%mapX,(byte)frontPos.y%mapZ);
+			leftPos = new Vector2((byte)leftPos.x%mapX,(byte)leftPos.y%mapZ);
+			rightPos = new Vector2((byte)rightPos.x%mapX,(byte)rightPos.y%mapZ);
+			
+		}
+		byte emptyPlaces = 0;
+		if (map [(byte)frontPos.x, (byte)frontPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
+		if (map [(byte)leftPos.x, (byte)leftPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
+		if (map [(byte)rightPos.x, (byte)rightPos.y].tile != Tile.TileType.destructable) emptyPlaces ++;
+
+		opArrows = new byte[3]; //empty monster treasure wall
+		if (emptyPlaces == 3) {
+						float tV = Random.value;
+						float mV = Random.value;
+						float eV = Random.value;
+						float minV = Mathf.Min (Mathf.Min (tV, mV), eV);
+						float maxV = Mathf.Max (Mathf.Max (tV, mV), eV);
+						if (tV == minV)
+								opArrows [0] = 2;
+						else if (mV == minV)
+								opArrows [0] = 1;
+						else if (eV == minV)
+								opArrows [0] = 0;
+			
+						if (tV == maxV)
+								opArrows [2] = 2;
+						else if (mV == maxV)
+								opArrows [2] = 1;
+						else if (eV == maxV)
+								opArrows [2] = 0;
+			
+						if (tV != maxV && tV != minV)
+								opArrows [1] = 2;
+						else if (mV != maxV && mV != minV)
+								opArrows [1] = 1;
+						else if (eV != maxV && eV != minV)
+								opArrows [1] = 0;
+				} else if (emptyPlaces == 2) {
+						if (map [(byte)frontPos.x, (byte)frontPos.y].tile == Tile.TileType.destructable) {
+								float tV = Random.value;
+								float mV = Random.value;
+					
+								float minV = Mathf.Min (tV, mV);
+								float maxV = Mathf.Max (tV, mV);
+								if (tV == minV)
+										opArrows [0] = 2;
+								else if (mV == minV)
+										opArrows [0] = 1;
+					
+					
+								if (tV == maxV)
+										opArrows [2] = 2;
+								else if (mV == maxV)
+										opArrows [2] = 1;
+					
+								opArrows [1] = 3;
+
+						} else if (map [(byte)leftPos.x, (byte)leftPos.y].tile == Tile.TileType.destructable) {
+								float tV = Random.value;
+								float mV = Random.value;
+					
+								float minV = Mathf.Min (tV, mV);
+								float maxV = Mathf.Max (tV, mV);
+								if (tV == minV)
+										opArrows [1] = 2;
+								else if (mV == minV)
+										opArrows [1] = 1;
+					
+					
+								if (tV == maxV)
+										opArrows [2] = 2;
+								else if (mV == maxV)
+										opArrows [2] = 1;
+					
+								opArrows [0] = 3;
+						} else {
+								float tV = Random.value;
+								float mV = Random.value;
+					
+								float minV = Mathf.Min (tV, mV);
+								float maxV = Mathf.Max (tV, mV);
+								if (tV == minV)
+										opArrows [0] = 2;
+								else if (mV == minV)
+										opArrows [0] = 1;
+					
+					
+								if (tV == maxV)
+										opArrows [1] = 2;
+								else if (mV == maxV)
+										opArrows [1] = 1;
+
+								opArrows [2] = 3;
+						}
+				} else if (emptyPlaces == 1) {
+						if (map [(byte)frontPos.x, (byte)frontPos.y].tile != Tile.TileType.destructable) {
+								opArrows [0] = 3;
+								opArrows [1] = 1;
+								opArrows [2] = 3;
+						} else if (map [(byte)leftPos.x, (byte)leftPos.y].tile != Tile.TileType.destructable) {
+								opArrows [0] = 1;
+								opArrows [1] = 3;
+								opArrows [2] = 3;
+						} else {
+								opArrows [0] = 1;
+								opArrows [1] = 3;
+								opArrows [2] = 1;
+						}
+				} else {
+					opArrows [0] = 3;
+					opArrows [1] = 3;
+					opArrows [2] = 3;
+				}
+
+
+
+	
+
+
+
+	}
+
+
+
 	void MoveForward(){
 		if (face == 0) {
 				iTween.MoveTo (gameObject, new Vector3 (Mathf.Round (transform.position.x), Mathf.Round (transform.position.y), Mathf.Round (transform.position.z)) + new Vector3 (0, 0, -2), 2.0f);
@@ -274,6 +571,7 @@ public class GenerateLevel : MonoBehaviour {
 		map [(int)wallPosition.x, (int)wallPosition.z].tileObj = go;
 		map [(int)wallPosition.x, (int)wallPosition.z].tile = Tile.TileType.destructable;
 		if(Network.isClient || Network.isServer)GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oNewWall ((int)(wallPosition.x*mapZ+wallPosition.z));
+		mapBuilt();
 
 	}
 	public void buildWall(int pos){
