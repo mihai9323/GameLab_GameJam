@@ -3,22 +3,7 @@ using System.Collections;
 
 public class GenerateLevel : MonoBehaviour {
 
-
-
-
-
-
-
-
-
-
-
-
-
 	public AlertController ac;
-
-
-
 	public enum Status
 		{
 			CreateMap,WaitCreation,SuggestPath,WaitForSuggestion,ChooseMyPath,WaitForPath,MoveMe,WaitForMove
@@ -83,6 +68,7 @@ public class GenerateLevel : MonoBehaviour {
 	}
 	void Start(){
 		CreateMap ();
+		ac.displayHowToPlay ();
 	}
 	public void CreateMap(){ //face : 0 = north 1 = east 2=south 3=west
 		madeCombo = false;
@@ -121,9 +107,12 @@ public class GenerateLevel : MonoBehaviour {
 	public void OpponentSetGround(byte[] arr){
 		myArrows = arr;
 		OpGameState = Status.WaitForSuggestion;
+
 		if (GameState == Status.WaitForSuggestion) {
 			GameState = Status.ChooseMyPath;
-
+			ac.hideWait();
+			ac.hidePathForOp();
+			if(turn==0) ac.displayHowToPath();
 				
 		}
 	}
@@ -131,7 +120,7 @@ public class GenerateLevel : MonoBehaviour {
 		OpGameState = Status.WaitForPath;
 		if (GameState == Status.WaitForPath) {
 			GameState = Status.MoveMe;
-			
+			ac.hideWait();
 			
 		}
 	}
@@ -153,9 +142,17 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[1];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
-										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
+										ac.displayWait();
+										if(OpGameState == Status.WaitForSuggestion){
+											GameState=Status.ChooseMyPath;
+											ac.hideWait ();
+											if (turn == 0) {
+												ac.displayHowToPath();
+											}
+										}
 										chosenArrow = ChosenArrow.none;
 								}
+
 				
 								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
 										haveInfo = false;
@@ -167,8 +164,15 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[0];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
-										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
-										chosenArrow = ChosenArrow.none;
+										ac.displayWait();
+										if(OpGameState == Status.WaitForSuggestion){
+											GameState=Status.ChooseMyPath;
+											ac.hideWait ();
+											if (turn == 0) {
+												ac.displayHowToPath();
+											}
+										}
+					chosenArrow = ChosenArrow.none;
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
 										haveInfo = false;
@@ -180,7 +184,14 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[2];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
-										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
+										ac.displayWait();
+										if(OpGameState == Status.WaitForSuggestion){
+											GameState=Status.ChooseMyPath;
+											ac.hideWait ();
+											if (turn == 0) {
+												ac.displayHowToPath();
+											}
+										}
 										chosenArrow = ChosenArrow.none;
 								}
 						}
@@ -188,22 +199,24 @@ public class GenerateLevel : MonoBehaviour {
 						if (chosenArrow == ChosenArrow.none) {
 								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
 										chosenArrow = ChosenArrow.forward;
-										GameState = Status.WaitForPath;
-										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
+										GameState = Status.WaitForPath; ac.displayWait();
+									if(OpGameState == Status.WaitForPath){ GameState=Status.MoveMe; ac.hideWait(); }
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 								}
 				
 								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
 										chosenArrow = ChosenArrow.left;
 										GameState = Status.WaitForPath;
-										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
-										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
+					ac.displayWait();
+					if(OpGameState == Status.WaitForPath){ GameState=Status.MoveMe; ac.hideWait(); }
+					GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
 										chosenArrow = ChosenArrow.right;
 								    	GameState = Status.WaitForPath;
-										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
-										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
+					ac.displayWait();
+					if(OpGameState == Status.WaitForPath){ GameState=Status.MoveMe; ac.hideWait(); }
+					GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 									}
 						}
 		
@@ -264,6 +277,8 @@ public class GenerateLevel : MonoBehaviour {
 			getDirectionData();
 			haveInfo = true;
 			GameState = Status.SuggestPath;
+			ac.hideWait();
+			ac.displayPathForOp();
 		}
 		mapBuilt ();
 	}
@@ -273,14 +288,12 @@ public class GenerateLevel : MonoBehaviour {
 		mapData [0] = (byte)playerPosition.x;
 		mapData [1] = (byte)playerPosition.y;
 		mapData [2] = (byte)face;
-		GameState = Status.WaitCreation;
+		GameState = Status.WaitCreation; ac.displayWait();
 		if(OpGameState == Status.WaitCreation){
 			GameState = Status.SuggestPath;
-<<<<<<< HEAD
-			//sp.setArrows(opArrows);
-=======
-		//	sp.setArrows(opArrows); //////////rand
->>>>>>> f23f559ac0561a0d155db6957c778a08729c8ae8
+			ac.hideWait();
+			ac.displayPathForOp();
+			sp.setArrows(opArrows);
 		}
 		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
 	}
@@ -294,13 +307,11 @@ public class GenerateLevel : MonoBehaviour {
 
 		if (GameState == Status.WaitCreation) {
 				GameState = Status.SuggestPath;
+			ac.hideWait();
+				ac.displayPathForOp();
 				getDirectionData ();
 				haveInfo = true;
-<<<<<<< HEAD
-				//sp.setArrows (opArrows);
-=======
-			//	sp.setArrows (opArrows); ////////////////////// rand
->>>>>>> f23f559ac0561a0d155db6957c778a08729c8ae8
+				sp.setArrows (opArrows);
 			} else {
 				
 				

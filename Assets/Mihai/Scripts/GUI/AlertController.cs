@@ -17,8 +17,18 @@ public class AlertController : MonoBehaviour {
 		notification = true;
 	}
 	public void displayPathForOp(){
+
 		pathForOpp.renderer.enabled = true;
 		}
+
+	public void hidePathForOp(){
+		pathForOpp.renderer.enabled = false;
+		}
+	public void hideWait(){
+		waitingForPlayer.renderer.enabled = false;
+	}
+
+
 	public void displayHowToPath(){
 		howToMyPath.renderer.enabled = false;
 		howToPlay.renderer.enabled = true;

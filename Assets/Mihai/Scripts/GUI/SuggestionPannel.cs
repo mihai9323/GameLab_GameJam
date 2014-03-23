@@ -3,8 +3,9 @@ using System.Collections;
 
 public class SuggestionPannel : MonoBehaviour {
 
-	public GUITexture leftArrow,frontArrow,rightArrow;
-	public Texture monster, treasure, empty;
+	public GameObject bg;
+	public GameObject leftArrow,frontArrow,rightArrow;
+	public Material monster, treasure, empty;
 
 	private byte[] arrows; //0 empty 1 monster 2 treasure 3 wall
 	// Use this for initialization
@@ -13,30 +14,37 @@ public class SuggestionPannel : MonoBehaviour {
 //	
 
 		switch (arr [0]) {
-			case 0: leftArrow.texture = empty; break;
-			case 1: leftArrow.texture = monster; break;
-			case 2: leftArrow.texture = treasure; break;
-			case 3: leftArrow.texture = empty; break;
+			case 0: leftArrow.renderer.material = empty; break;
+		case 1: leftArrow.renderer.material = monster; break;
+		case 2: leftArrow.renderer.material = treasure; break;
+		case 3: leftArrow.renderer.material = empty; break;
 			//default: leftArrow.texture = empty;
 		
 		}
 		switch (arr [1]) {
-		case 0: frontArrow.texture = empty; break;
-		case 1: frontArrow.texture = monster; break;
-		case 2: frontArrow.texture = treasure; break;
-		case 3: frontArrow.texture = empty; break;
+		case 0: frontArrow.renderer.material = empty; break;
+		case 1: frontArrow.renderer.material = monster; break;
+		case 2: frontArrow.renderer.material = treasure; break;
+		case 3: frontArrow.renderer.material = empty; break;
 		//default: frontArrow.texture = empty;
 			
 		}
 		switch (arr [2]) {
-		case 0: rightArrow.texture = empty; break;
-		case 1: rightArrow.texture = monster; break;
-		case 2: rightArrow.texture = treasure; break;
-		case 3: rightArrow.texture = empty; break;
+		case 0: rightArrow.renderer.material = empty; break;
+		case 1: rightArrow.renderer.material = monster; break;
+		case 2: rightArrow.renderer.material = treasure; break;
+		case 3: rightArrow.renderer.material = empty; break;
 //		default: rightArrow.texture = empty;
 
 		}
 
+	}
+	void Update(){
+		if (this.renderer.enabled) {
+			bg.renderer.enabled = leftArrow.renderer.enabled = frontArrow.renderer.enabled = rightArrow.renderer.enabled = true;
+		} else {
+			bg.renderer.enabled = leftArrow.renderer.enabled = frontArrow.renderer.enabled = rightArrow.renderer.enabled = false;
+		}
 	}
 
 
