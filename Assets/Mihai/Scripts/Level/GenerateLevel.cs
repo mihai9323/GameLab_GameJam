@@ -61,6 +61,7 @@ public class GenerateLevel : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+		haveInfo = false;
 		delayOver = false;
 		GameState = Status.CreateMap;
 		OpGameState = Status.CreateMap;
@@ -124,11 +125,13 @@ public class GenerateLevel : MonoBehaviour {
 	void Update () {
 		Debug.Log (GameState+" "+OpGameState);
 		if (turn - lastCombo > 1)		combo = 1;
-		if (GameState == Status.SuggestPath) {
+		if (GameState == Status.SuggestPath && haveInfo) {
+
 						if (chosenArrow == ChosenArrow.none) {
 								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
+										haveInfo = false;
 										chosenArrow = ChosenArrow.forward;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
@@ -140,8 +143,9 @@ public class GenerateLevel : MonoBehaviour {
 								}
 				
 								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
+										haveInfo = false;
 										chosenArrow = ChosenArrow.left;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
@@ -152,8 +156,9 @@ public class GenerateLevel : MonoBehaviour {
 										chosenArrow = ChosenArrow.none;
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
+										haveInfo = false;
 										chosenArrow = ChosenArrow.right;
-										byte[] arr = new byte[3];
+										byte[] arr = new byte[4];
 										arr[0] = opArrows[0];
 										arr[1] = opArrows[1];
 										arr[2] = opArrows[2];
@@ -254,12 +259,14 @@ public class GenerateLevel : MonoBehaviour {
 		}
 		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
 	}
+	bool haveInfo;
 	public void getMapData(byte[] mD){
 		//gets the position and orientation of the oponent
 		opPlayerPosition.x = mD [0];
-		opPlayerPosition.x = mD [1];
+		opPlayerPosition.y = mD [1];
 		opFace = mD [2];
 		OpGameState = Status.WaitCreation;
+		haveInfo = true;
 		if (GameState == Status.WaitCreation) {
 			GameState = Status.SuggestPath;
 			getDirectionData();
