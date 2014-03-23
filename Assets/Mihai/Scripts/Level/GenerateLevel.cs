@@ -482,24 +482,37 @@ public class GenerateLevel : MonoBehaviour {
 	}
 	void addMazeObjects(){
 		if (face == 0) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z+2),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z+3),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z+2),Quaternion.identity);
+			GameObject go1= Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z+2),Quaternion.identity) as GameObject;
+			GameObject go2=Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z+3),Quaternion.identity)as GameObject;
+			GameObject go3=Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z+2),Quaternion.identity)as GameObject;
+			go1.transform.parent = this.transform;
+			go2.transform.parent = this.transform;
+			go3.transform.parent = this.transform;
 		}
 		if (face == 1) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z+1),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x+3,height,camera.transform.position.z),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z-1),Quaternion.identity);
+			GameObject go1=Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z+1),Quaternion.identity)as GameObject;
+			GameObject go2=Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x+3,height,camera.transform.position.z),Quaternion.identity)as GameObject;
+			GameObject go3=Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z-1),Quaternion.identity)as GameObject;
+			go1.transform.parent = this.transform;
+			go2.transform.parent = this.transform;
+			go3.transform.parent = this.transform;
+
 		}
 		if (face == 2) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z-2),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z-3),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z-2),Quaternion.identity);
+			GameObject go1=Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z-2),Quaternion.identity)as GameObject;
+			GameObject go2=Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z-3),Quaternion.identity)as GameObject;
+			GameObject go3=Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z-2),Quaternion.identity)as GameObject;
+			go1.transform.parent = this.transform;
+			go2.transform.parent = this.transform;
+			go3.transform.parent = this.transform;
 		}
 		if (face == 3) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z-1),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x-3,height,camera.transform.position.z+0),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z+1),Quaternion.identity);
+			GameObject go1=Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z-1),Quaternion.identity)as GameObject;
+			GameObject go2=Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x-3,height,camera.transform.position.z+0),Quaternion.identity)as GameObject;
+			GameObject go3=Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z+1),Quaternion.identity)as GameObject;
+			go1.transform.parent = this.transform;
+			go2.transform.parent = this.transform;
+			go3.transform.parent = this.transform;
 		}
 	}
 
