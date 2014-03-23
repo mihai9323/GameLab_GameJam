@@ -29,7 +29,7 @@ public class LobbyScript : MonoBehaviour {
 			if(Hd!=null){
 				foreach(HostData hd in Hd){
 					if(hd.connectedPlayers == 2){
-						NI.oStartGame("MihaiGameScene");
+						NI.oStartGame("Game");
 						//Application.LoadLevel("CristiScene");
 					}
 				}
