@@ -482,24 +482,24 @@ public class GenerateLevel : MonoBehaviour {
 	}
 	void addMazeObjects(){
 		if (face == 0) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x-1,height,transform.position.z+2),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x,height,transform.position.z+3),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x+1,height,transform.position.z+2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z+2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z+3),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z+2),Quaternion.identity);
 		}
 		if (face == 1) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x+2,height,transform.position.z+1),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x+3,height,transform.position.z),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x+2,height,transform.position.z-1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z+1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x+3,height,camera.transform.position.z),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x+2,height,camera.transform.position.z-1),Quaternion.identity);
 		}
 		if (face == 2) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x+1,height,transform.position.z-2),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x,height,transform.position.z-3),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x-1,height,transform.position.z-2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x+1,height,camera.transform.position.z-2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x,height,camera.transform.position.z-3),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-1,height,camera.transform.position.z-2),Quaternion.identity);
 		}
 		if (face == 3) {
-			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x-2,height,transform.position.z-1),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x-3,height,transform.position.z+0),Quaternion.identity);
-			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x-2,height,transform.position.z+1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z-1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(camera.transform.position.x-3,height,camera.transform.position.z+0),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(camera.transform.position.x-2,height,camera.transform.position.z+1),Quaternion.identity);
 		}
 	}
 
