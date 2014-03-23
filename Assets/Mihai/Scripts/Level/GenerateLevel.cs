@@ -18,7 +18,7 @@ public class GenerateLevel : MonoBehaviour {
 	public ChosenArrow chosenArrow;
 	public byte[] myArrows;
 
-
+	private bool madeCombo;
 	public float blockSize;
 	public int mapX,mapZ;
 	public float height;
@@ -31,7 +31,8 @@ public class GenerateLevel : MonoBehaviour {
 	public GameObject[] Path;
 	public GameObject[] DestructableWall;
 
-
+	private int turn;
+	private int lastCombo;
 	public GameObject camera;
 	public float CameraOffSet;
 	public float CameraHeight = 1.0f;
@@ -46,8 +47,11 @@ public class GenerateLevel : MonoBehaviour {
 	public bool playTurn;
 	public byte[] opArrows; // 0-empty 1-monster 2-treasure 3-wall
 
-	public GameObject monster;
-	public GameObject treasure;
+	public GameObject[] mazeObjects;
+
+	public int gold =0;
+	public int combo = 1;
+
 	private NetworkInterface NI;
 	private Vector3 destination;
 	private Vector3 wallPosition;
@@ -65,7 +69,7 @@ public class GenerateLevel : MonoBehaviour {
 		CreateMap ();
 	}
 	public void CreateMap(){ //face : 0 = north 1 = east 2=south 3=west
-
+		madeCombo = false;
 		Vector3 position;
 		if (Network.isServer) {
 			position = new Vector3 (playerPosition.x, 0, playerPosition.y);
@@ -118,6 +122,7 @@ public class GenerateLevel : MonoBehaviour {
 
 
 	void Update () {
+		if (turn - lastCombo > 1)		combo = 1;
 		if (GameState == Status.SuggestPath) {
 						if (chosenArrow == ChosenArrow.none) {
 								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
@@ -176,21 +181,27 @@ public class GenerateLevel : MonoBehaviour {
 						}
 		
 				} else if (GameState == Status.MoveMe) {
+						
 						if (chosenArrow == ChosenArrow.forward) {
+							addMazeObjects();
 							MoveForward ();
 							StartCoroutine(delay (3.0f));
-					
+							turn++;
 							
 						}
 						
 						if (chosenArrow == ChosenArrow.left) {
+							addMazeObjects();
 							MoveLeft ();
 							StartCoroutine(delay (3.0f));
+							turn++;
 							
 						}
 						if (chosenArrow == ChosenArrow.right) {
+							addMazeObjects();
 							MoveRight();
 							StartCoroutine(delay (3.0f));
+							turn++;
 							
 						}
 					chosenArrow = ChosenArrow.none;
@@ -407,7 +418,28 @@ public class GenerateLevel : MonoBehaviour {
 
 
 	}
-
+	void addMazeObjects(){
+		if (face == 0) {
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x-1,height,transform.position.z+2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x,height,transform.position.z+3),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x+1,height,transform.position.z+2),Quaternion.identity);
+		}
+		if (face == 1) {
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x+2,height,transform.position.z+1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x+3,height,transform.position.z),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x+2,height,transform.position.z-1),Quaternion.identity);
+		}
+		if (face == 2) {
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x+1,height,transform.position.z-2),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x,height,transform.position.z-3),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x-1,height,transform.position.z-2),Quaternion.identity);
+		}
+		if (face == 3) {
+			Instantiate (mazeObjects[myArrows[0]],new Vector3(transform.position.x-2,height,transform.position.z-1),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[1]],new Vector3(transform.position.x-3,height,transform.position.z+0),Quaternion.identity);
+			Instantiate (mazeObjects[myArrows[2]],new Vector3(transform.position.x-2,height,transform.position.z+1),Quaternion.identity);
+		}
+	}
 
 
 	void MoveForward(){
@@ -589,4 +621,23 @@ public class GenerateLevel : MonoBehaviour {
 		map [(int)wallPosition.x, (int)wallPosition.z].tile = Tile.TileType.destructable;
 
 	}
+
+	public void died(GameObject monster){
+
+	}
+	public void takeTreasure(GameObject treasure){
+		gold += combo * gold;
+		combo++;
+		lastCombo = turn;
+	}
+	public void destroyWall(GameObject wall){
+		gold -= (gold * 10 / 100);
+		combo = 1;
+	}
+
+
 }
+
+
+
+
