@@ -122,6 +122,7 @@ public class GenerateLevel : MonoBehaviour {
 
 
 	void Update () {
+		Debug.Log (GameState+" "+OpGameState);
 		if (turn - lastCombo > 1)		combo = 1;
 		if (GameState == Status.SuggestPath) {
 						if (chosenArrow == ChosenArrow.none) {
