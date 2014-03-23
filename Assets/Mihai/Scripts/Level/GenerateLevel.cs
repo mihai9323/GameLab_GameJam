@@ -4,6 +4,21 @@ using System.Collections;
 public class GenerateLevel : MonoBehaviour {
 
 
+
+
+
+
+
+
+
+
+
+
+
+	public AlertController ac;
+
+
+
 	public enum Status
 		{
 			CreateMap,WaitCreation,SuggestPath,WaitForSuggestion,ChooseMyPath,WaitForPath,MoveMe,WaitForMove
@@ -261,7 +276,7 @@ public class GenerateLevel : MonoBehaviour {
 		GameState = Status.WaitCreation;
 		if(OpGameState == Status.WaitCreation){
 			GameState = Status.SuggestPath;
-			sp.setArrows(opArrows);
+			//sp.setArrows(opArrows);
 		}
 		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
 	}
@@ -277,7 +292,7 @@ public class GenerateLevel : MonoBehaviour {
 				GameState = Status.SuggestPath;
 				getDirectionData ();
 				haveInfo = true;
-				sp.setArrows (opArrows);
+				//sp.setArrows (opArrows);
 			} else {
 				
 				
