@@ -122,6 +122,7 @@ public class GenerateLevel : MonoBehaviour {
 
 
 	void Update () {
+		Debug.Log (GameState+" "+OpGameState);
 		if (turn - lastCombo > 1)		combo = 1;
 		if (GameState == Status.SuggestPath) {
 						if (chosenArrow == ChosenArrow.none) {
@@ -134,6 +135,7 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[1];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
+										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
 										chosenArrow = ChosenArrow.none;
 								}
 				
@@ -146,6 +148,7 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[0];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
+										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
 										chosenArrow = ChosenArrow.none;
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
@@ -157,6 +160,7 @@ public class GenerateLevel : MonoBehaviour {
 										arr[3] = opArrows[2];
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendGroundArrow(arr);
 										GameState = Status.WaitForSuggestion;
+										if(OpGameState == Status.WaitForSuggestion) GameState=Status.ChooseMyPath;
 										chosenArrow = ChosenArrow.none;
 								}
 						}
@@ -165,17 +169,20 @@ public class GenerateLevel : MonoBehaviour {
 								if (Input.GetKeyUp (KeyCode.W) && delayOver) {
 										chosenArrow = ChosenArrow.forward;
 										GameState = Status.WaitForPath;
+										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 								}
 				
 								if (Input.GetKeyUp (KeyCode.A) && delayOver) {
 										chosenArrow = ChosenArrow.left;
 										GameState = Status.WaitForPath;
+										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 								}
 								if (Input.GetKeyUp (KeyCode.D) && delayOver) {
 										chosenArrow = ChosenArrow.right;
 								    	GameState = Status.WaitForPath;
+										if(OpGameState == Status.WaitForPath) GameState=Status.MoveMe;
 										GameObject.Find("NetworkInterface").GetComponent<NetworkInterface>().oSendPath();
 									}
 						}
@@ -242,6 +249,9 @@ public class GenerateLevel : MonoBehaviour {
 		mapData [1] = (byte)playerPosition.y;
 		mapData [2] = (byte)face;
 		GameState = Status.WaitCreation;
+		if(OpGameState == Status.WaitCreation){
+			GameState = Status.SuggestPath;
+		}
 		GameObject.Find ("NetworkInterface").GetComponent<NetworkInterface> ().oGameBuilt (mapData);
 	}
 	public void getMapData(byte[] mD){
